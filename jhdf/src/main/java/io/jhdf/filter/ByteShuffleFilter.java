@@ -23,9 +23,16 @@ public class ByteShuffleFilter implements Filter {
 
 	@Override
 	public byte[] decode(byte[] data, int[] filterData) {
+		// When filterData is empty (no explicit cd_values in the HDF5 filter pipeline),
+		// fall back to elementSize=1 which is a no-op (identity unshuffle).
+		final int elementSize = filterData.length > 0 ? filterData[0] : 1;
+		return decode(data, filterData, elementSize);
+	}
 
-		// Bytes in each element e.g float32 = 4 bytes
-		final int dataSize = filterData[0];
+	@Override
+	public byte[] decode(byte[] data, int[] filterData, int elementSize) {
+		// Use filterData[0] if present, otherwise use the provided elementSize fallback.
+		final int dataSize = filterData.length > 0 ? filterData[0] : elementSize;
 
 		// A quick shortcut if no shuffling is needed
 		if (dataSize == 1) {

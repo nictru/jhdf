@@ -25,6 +25,10 @@ public class PipelineFilterWithData {
 		return filter.decode(data, filterData);
 	}
 
+	byte[] decode(byte[] data, int elementSize) {
+		return filter.decode(data, filterData, elementSize);
+	}
+
 	@Override
 	public String toString() {
 		return filter.getName() + " (id=" + filter.getId() + ") data=" + Arrays.toString(filterData);

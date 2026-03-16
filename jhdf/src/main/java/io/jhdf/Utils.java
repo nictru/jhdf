@@ -199,11 +199,7 @@ public final class Utils {
 			case 7:
 				return readArbitraryLengthBytesAsUnsignedLong(buffer, length);
 			case 8:
-				long value = buffer.getLong();
-				if (value < 0 && value != Constants.UNDEFINED_ADDRESS) {
-					throw new ArithmeticException("Could not convert to unsigned value: " + value);
-				}
-				return value;
+				return buffer.getLong();
 			default:
 				throw new IllegalArgumentException("Couldn't read " + length + " bytes as int");
 		}

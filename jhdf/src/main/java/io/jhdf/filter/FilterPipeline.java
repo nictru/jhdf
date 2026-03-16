@@ -43,11 +43,25 @@ public class FilterPipeline {
 	 * @throws HdfFilterException if the decode operation fails
 	 */
 	public byte[] decode(byte[] encodedData) {
+		return decode(encodedData, 1);
+	}
+
+	/**
+	 * Applies all the filters in this pipeline to decode the data, passing the
+	 * dataset element size as a fallback for filters (e.g. shuffle) whose
+	 * {@code filterData} may be empty.
+	 *
+	 * @param encodedData the data to be decoded
+	 * @param elementSize the size in bytes of one dataset element
+	 * @return the decoded data
+	 * @throws HdfFilterException if the decode operation fails
+	 */
+	public byte[] decode(byte[] encodedData, int elementSize) {
 
 		// Apply the filters, decoding so reverse order
 		for (int i = filters.size() -1; i >= 0; i--) {
 			PipelineFilterWithData filter = filters.get(i);
-			encodedData = filter.decode(encodedData);
+			encodedData = filter.decode(encodedData, elementSize);
 		}
 
 		return encodedData;
