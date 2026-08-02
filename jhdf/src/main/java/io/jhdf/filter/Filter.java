@@ -3,13 +3,14 @@
  *
  * https://jhdf.io
  *
- * Copyright (c) 2025 James Mudd
+ * Copyright (c) 2026 James Mudd
  *
  * MIT License see 'LICENSE' file
  */
 package io.jhdf.filter;
 
 import io.jhdf.exceptions.HdfFilterException;
+import io.jhdf.exceptions.UnsupportedHdfException;
 
 /**
  * Interface to be implemented to be a HDF5 filter.
@@ -61,6 +62,23 @@ public interface Filter {
 	 */
 	default byte[] decode(byte[] encodedData, int[] filterData, int elementSize) {
 		return decode(encodedData, filterData);
+	}
+
+	/**
+	 * Applies this filter to encode data when writing. The default implementation
+	 * throws {@link UnsupportedHdfException}, filters supporting writing must
+	 * override this method. This method must be thread safe, multiple threads may
+	 * use the filter simultaneously.
+	 *
+	 * @param data       the data to be encoded
+	 * @param filterData the settings this filter is used with. e.g. compression
+	 *                   level.
+	 * @return the encoded data
+	 * @throws HdfFilterException if the encode operation fails
+	 * @since v0.13.0
+	 */
+	default byte[] encode(byte[] data, int[] filterData) {
+		throw new UnsupportedHdfException("Filter [" + getName() + " id=" + getId() + "] does not support encoding");
 	}
 
 }
